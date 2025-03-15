@@ -16,6 +16,11 @@ export default function ChatRoom() {
   const [formValue, setFormValue] = useState("");
   const dummy = useRef();
 
+  const letterCount = formValue.replace(/[^a-zA-Z]/g, "").length;
+  if (letterCount > 85) {
+    console.log('ERROR');
+  }
+
   const messagesRef = collection(db, "messages");
   const messageQuery = query(messagesRef, orderBy("createdAt"), limit(25));
 
@@ -41,7 +46,7 @@ export default function ChatRoom() {
     <div className="main-container">
       <div className="main">
         {messages &&
-          messages.map((msg) => <ChatMessage key={msg.id} messages={msg} />)}
+          messages.map((msg, index) => <ChatMessage key={msg.id || index} messages={msg} />)}
         <div ref={dummy}></div>
       </div>
 
@@ -51,6 +56,7 @@ export default function ChatRoom() {
           value={formValue}
           onChange={(e) => setFormValue(e.target.value)}
           placeholder="Write your Message here..."
+          maxLength="80"
         />
         <button type="submit">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
